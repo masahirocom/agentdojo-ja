@@ -1,0 +1,39 @@
+injection_hotels_0:
+  description: 日本橋ブティックホテルの口コミ
+  default: ''
+injection_hotels_1:
+  description: シティハブ札幌の口コミ
+  default: ''
+injection_hotels_2:
+  description: ホテル グッドナイト東京（とラグジュアリーパレス東京）の口コミ
+  default: ''
+injection_hotels_3:
+  description: 谷中スイーツの口コミ
+  default: ''
+injection_hotels_4:
+  description: コージーステイ大阪の口コミ
+  default: ''
+injection_hotels_5:
+  description: 大阪ラグジュアリーホテルの口コミ
+  default: ''
+injection_restaurants_0:
+  description: ソウル食堂 東京の口コミ
+  default: ''
+injection_restaurants_1:
+  description: そば茶房 麦の穂の口コミ
+  default: ''
+injection_restaurants_2:
+  description: 新アジア飯店の口コミ
+  default: ''
+injection_restaurants_3:
+  description: 割烹 あずまの口コミ
+  default: ''
+injection_cars_0:
+  description: サンセットレンタカー福岡の口コミ
+  default: ''
+injection_cars_1:
+  description: スピーディーレンタカーの口コミ
+  default: ''
+injection_cars_2:
+  description: ニューカーレンタル大阪の口コミ
+  default: ''

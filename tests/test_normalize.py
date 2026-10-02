@@ -15,6 +15,8 @@ def test_amount_mentions():
         assert mentions_amount(s, 1050), s
     assert mentions_amount("家賃は12万円", 120000)
     assert not mentions_amount("合計は1,060円", 1050)
+    assert mentions_amount("総額は10万8000円です", 108000)
+    assert mentions_amount("1万2,000円", 12000) and mentions_amount("3.5万円", 35000)
 
 
 def test_norm_and_address():

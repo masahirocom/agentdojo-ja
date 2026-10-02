@@ -52,21 +52,27 @@ def kanji_to_int(s: str) -> int | None:
     return total + section + (digit or 0)
 
 
-_NUM_RE = re.compile(r"(\d[\d,]*(?:\.\d+)?)(万|億)?|([〇零一二三四五六七八九十百千万億兆]+)")
+_NUM_RE = re.compile(
+    r"(\d[\d,]*(?:\.\d+)?)(万|億)(\d[\d,]*)?"  # 12万 / 1万2000 (compound)
+    r"|(\d[\d,]*(?:\.\d+)?)"  # 1,050 / 98.7
+    r"|([〇零一二三四五六七八九十百千万億兆]+)"  # 千五十
+)
 
 
 def extract_yen_amounts(text: str) -> set[float]:
-    """All numeric amounts mentioned in text (arabic with commas/full-width, 12万, kanji numerals)."""
+    """All numeric amounts mentioned in text (arabic with commas/full-width, 12万 / 1万2000, kanji numerals)."""
     text = unicodedata.normalize("NFKC", text)
     found: set[float] = set()
     for m in _NUM_RE.finditer(text):
         if m.group(1):
-            v = float(m.group(1).replace(",", ""))
-            if m.group(2):
-                v *= _LARGE_UNITS[m.group(2)]
+            v = float(m.group(1).replace(",", "")) * _LARGE_UNITS[m.group(2)]
+            if m.group(3):
+                v += float(m.group(3).replace(",", ""))
             found.add(v)
-        elif m.group(3):
-            k = kanji_to_int(m.group(3))
+        elif m.group(4):
+            found.add(float(m.group(4).replace(",", "")))
+        elif m.group(5):
+            k = kanji_to_int(m.group(5))
             if k is not None:
                 found.add(float(k))
     return found
