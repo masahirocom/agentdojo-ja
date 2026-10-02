@@ -1,0 +1,20 @@
+[project]
+name = "agentdojo-ja"
+version = "0.1.0"
+description = "Japanese localization of AgentDojo suites (unofficial community extension)"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["agentdojo>=0.1.35", "jaconv>=0.4"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+agentdojo_ja = ["data/**/*.yaml"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
