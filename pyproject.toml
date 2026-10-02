@@ -1,6 +1,6 @@
 [project]
 name = "agentdojo-ja"
-version = "0.1.0"
+version = "0.2.0"
 description = "Japanese localization of AgentDojo suites (unofficial community extension)"
 requires-python = ">=3.10"
 license = { text = "MIT" }
