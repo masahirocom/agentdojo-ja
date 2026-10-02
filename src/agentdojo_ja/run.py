@@ -62,6 +62,7 @@ def build_pipeline(model_id: str, language: str, unicode_output: bool, local_har
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model-id", required=True)
+    ap.add_argument("--suite", default="banking", help="suite name, or 'all' for every Japanese suite")
     ap.add_argument("--language", choices=["ja", "en"], default="ja", help="suite + system message language")
     ap.add_argument("--attack", default=None, help="attack name; omit for a utility-only run")
     ap.add_argument("--escaped-output", action="store_true", help="ablation: upstream's \\uXXXX-escaped tool output")
@@ -73,27 +74,35 @@ def main() -> None:
     args = ap.parse_args()
 
     version = agentdojo_ja.BENCHMARK_VERSION if args.language == "ja" else "v1.2.2"
-    suite = get_suite(version, "banking")
-    pipeline = build_pipeline(args.model_id, args.language, unicode_output=not args.escaped_output, local_harmony=args.local_harmony)
+    names = agentdojo_ja.SUITES if args.suite == "all" else [args.suite]
+    pipeline = build_pipeline(
+        args.model_id, args.language, unicode_output=not args.escaped_output, local_harmony=args.local_harmony
+    )
     tag = f"{args.language}{'-escaped' if args.escaped_output else ''}"
     logdir = args.logdir / tag
     logdir.mkdir(parents=True, exist_ok=True)
+    total_u = total_n = total_s = total_sn = 0
     with OutputLogger(str(logdir)):
-        if args.attack is None:
-            res = benchmark_suite_without_injections(
-                pipeline, suite, logdir, args.force_rerun, user_tasks=args.user_tasks, benchmark_version=version
-            )
-        else:
-            attack = load_attack(args.attack, suite, pipeline)
-            res = benchmark_suite_with_injections(
-                pipeline, suite, attack, logdir, args.force_rerun,
-                user_tasks=args.user_tasks, injection_tasks=args.injection_tasks, benchmark_version=version,
-            )
-    n_u = len(res["utility_results"]); u = sum(res["utility_results"].values())
-    print(f"[{tag}] utility: {u}/{n_u}")
-    if args.attack:
-        n_s = len(res["security_results"]); s = sum(res["security_results"].values())
-        print(f"[{tag}] attack={args.attack} security-violations (attack success): {s}/{n_s}")
+        for name in names:
+            suite = get_suite(version, name)
+            if args.attack is None:
+                res = benchmark_suite_without_injections(
+                    pipeline, suite, logdir, args.force_rerun, user_tasks=args.user_tasks, benchmark_version=version
+                )
+            else:
+                attack = load_attack(args.attack, suite, pipeline)
+                res = benchmark_suite_with_injections(
+                    pipeline, suite, attack, logdir, args.force_rerun,
+                    user_tasks=args.user_tasks, injection_tasks=args.injection_tasks, benchmark_version=version,
+                )
+            u, n = sum(res["utility_results"].values()), len(res["utility_results"])
+            print(f"[{tag}/{name}] utility: {u}/{n}")
+            total_u, total_n = total_u + u, total_n + n
+            if args.attack:
+                sv, sn = sum(res["security_results"].values()), len(res["security_results"])
+                print(f"[{tag}/{name}] attack={args.attack} attack-success: {sv}/{sn}")
+                total_s, total_sn = total_s + sv, total_sn + sn
+    print(f"[{tag}] TOTAL utility: {total_u}/{total_n}" + (f" | attack-success: {total_s}/{total_sn}" if args.attack else ""))
 
 
 if __name__ == "__main__":
