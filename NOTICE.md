@@ -13,6 +13,9 @@ The following parts adapt upstream code or structure and keep upstream's copyrig
 | `src/agentdojo_ja/suites/banking_ja/user_tasks.py` | `default_suites/v1/banking/user_tasks.py` (task intents, ground-truth structure, numbering) |
 | `src/agentdojo_ja/suites/banking_ja/injection_tasks.py` | `default_suites/v1/banking/injection_tasks.py` |
 | `src/agentdojo_ja/data/banking_ja/*.yaml` | `data/suites/banking/*.yaml` (structure) |
+| `src/agentdojo_ja/tools/{slack,email,calendar,travel,drive}_ja.py` | `default_suites/v1/tools/{slack,email_client,calendar_client,travel_booking_client,cloud_drive_client}.py` (data models reused; descriptions/messages localized) |
+| `src/agentdojo_ja/suites/{slack,travel,workspace}_ja/*` | `default_suites/v1{,_1_1,_1_2,...}/{slack,travel,workspace}/*` (task intents, ground-truth structure, numbering) |
+| `src/agentdojo_ja/data/{slack,travel,workspace}_ja/*.yaml` | `data/suites/{slack,travel,workspace}/*` (structure only; content is original and fictional) |
 | `src/agentdojo_ja/attacks.py` | structure of `attacks/important_instructions_attacks.py` |
 | `src/agentdojo_ja/run.py` | `scripts/benchmark.py` (usage of the benchmark API) |
 
