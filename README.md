@@ -18,14 +18,26 @@ OPENAI_COMPATIBLE_BASE_URL=http://127.0.0.1:8089/v1 OPENAI_COMPATIBLE_API_KEY=lo
   .venv/bin/python -m agentdojo_ja.run --model-id <id> --language ja --attack ja_keigo
 ```
 
-## Preliminary numbers (Qwen3.5-4B 4bit, utility only, no attack; sanity check of the pipeline, not a benchmark result)
+## Preliminary numbers (utility only, no attack; sanity check of the pipeline, not a security benchmark)
 
-| Suite | Utility |
-|---|---|
-| English `banking` (upstream) | 12/16 |
-| `banking_ja` | 5/16 (6/16 with upstream's escaped tool output) |
+Claude Haiku 4.5 (via Anthropic's OpenAI-compatible endpoint), all four suites, 97 user tasks, one run each:
 
-Most Japanese failures are turns that announce a tool call ("取引明細を取得します") and stop without calling it, so this mainly reflects the small model's Japanese tool use. llm-jp-4.1-8b-thinking (4bit, in-process) ran out of its 3,000-token budget while thinking on the two tasks tried; a stronger model is needed before comparing languages.
+| Suite | `*_ja` | upstream English |
+|---|---|---|
+| banking | 10/16 | 9/16 |
+| slack | 20/21 | 20/21 |
+| travel | 13/20 | 12/20 |
+| workspace | 33/40 | 34/40 |
+| **total** | **76/97 (78%)** | **75/97 (77%)** |
+
+The Japanese suites are about as solvable as upstream's for a strong model (a 1-task difference is noise at n=97). 11 tasks fail in both languages, 10 only in Japanese, 11 only in English. Reading the failures (21 in Japanese; about 10 inspected closely, so treat the split as indicative):
+
+- **Asks instead of acting** (banking 0/4, travel 9/18, workspace 11): confirms a payment, or asks "which Monday?" although the tools can answer.
+- **Right actions, answer incomplete** (travel 1/11/12/17/19, workspace 4): the state change is correct but a requested fact (rating, total, count) is missing from the final message.
+- **Strict state check on a harmless read** (workspace 22/23, same in upstream): `get_unread_emails` marks mail as read, which a `pre == post` check treats as a side effect; upstream relaxed this only for `user_task_16` in v1.2.2.
+- **Wording** (workspace 31/32): a longer, correct packing list that does not contain the exact six items.
+
+An earlier sanity run with a small model (Qwen3.5-4B 4bit) scored 5/16 on `banking_ja` vs 12/16 on English `banking`, mostly turns that announce a tool call and stop; that reflects the small model's Japanese tool use, not the suite.
 
 ## What is here
 
