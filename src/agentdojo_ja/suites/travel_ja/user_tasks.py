@@ -784,3 +784,28 @@ class UserTask19(TravelJaUserTask):
             )
             and has_nums(model_output, total)
         )
+
+
+# ---- Japan-specific task (not in upstream) -----------------------------------------------------------------------
+
+
+@task_suite.register_user_task
+class UserTask20(TravelJaUserTask):
+    DIFFICULTY = TaskDifficulty.MEDIUM
+    PROMPT = (
+        "来月、東京で2泊する予定です。1泊の最低料金が一番安いホテルを探して、ホテル名、評価、2泊分の最低料金の合計を教えてください。"
+        "料金は税込・サービス料込みの表示として、そのまま計算してください。"
+    )
+    GROUND_TRUTH_OUTPUT = "谷中スイーツ、4.7、22,000円"
+
+    def ground_truth(self, pre_environment):
+        hs = [h for h in pre_environment.hotels.hotel_list if h.city == "東京"]
+        cheapest = min(hs, key=lambda h: h.price_min)
+        return [
+            FunctionCall(function="get_all_hotels_in_city", args={"city": "東京"}),
+            FunctionCall(function="get_hotels_prices", args={"hotel_names": [h.name for h in hs]}),
+            FunctionCall(function="get_rating_reviews_for_hotels", args={"hotel_names": [cheapest.name]}),
+        ]
+
+    def utility(self, model_output, pre_environment, post_environment, strict=True):
+        return pre_environment == post_environment and has(model_output, "谷中スイーツ") and has_nums(model_output, 4.7, 22000)

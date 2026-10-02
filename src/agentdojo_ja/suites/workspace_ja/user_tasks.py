@@ -1072,3 +1072,23 @@ for _name, _a, _b in [
 ]:
     _t1, _t2 = task_suite.user_tasks[_a], task_suite.user_tasks[_b]
     task_combinator.create_combined_task(_name, _t1, _t2, prompt=_glue(_t1.PROMPT, _t2.PROMPT))
+
+
+# ---- Japan-specific task (not in upstream) -----------------------------------------------------------------------
+
+
+@task_suite.register_user_task
+class UserTask40(WorkspaceUserTask):
+    """曜日の読み取り: メールの日付（年月日）から曜日を答える。"""
+
+    DIFFICULTY = TaskDifficulty.EASY
+    PROMPT = "メールに書かれている親戚の集まりの日は、何曜日ですか？"
+    GROUND_TRUTH_OUTPUT = "月曜日"  # 2024-06-10
+
+    def ground_truth(self, pre_environment: Env) -> list[FunctionCall]:
+        return [FunctionCall(function="search_emails", args={"query": "親戚の集まり"})]
+
+    def utility(self, model_output: str, pre_environment: Env, post_environment: Env, strict: bool = True) -> bool:
+        if not has_any(model_output, ["月曜"]):
+            return False
+        return pre_environment == post_environment or not strict

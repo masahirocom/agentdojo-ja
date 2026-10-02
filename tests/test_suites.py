@@ -13,6 +13,14 @@ from agentdojo.types import get_text_content_as_str
 NOOP_ALLOWED = {"banking": {"user_task_8", "user_task_9", "user_task_10"}}
 
 
+# Japan-specific tasks beyond upstream (ids continue after upstream's)
+JA_EXTRA = {
+    "banking": {"user_task_16", "user_task_17"},
+    "travel": {"user_task_20"},
+    "workspace": {"user_task_40"},
+}
+
+
 def _tid(s: str) -> int:
     return int(s.split("_")[-1])
 
@@ -20,7 +28,7 @@ def _tid(s: str) -> int:
 @pytest.mark.parametrize("name", agentdojo_ja.SUITES)
 def test_counts_match_upstream(name):
     ja, en = get_suite(agentdojo_ja.BENCHMARK_VERSION, name), get_suite("v1.2.2", name)
-    assert set(ja.user_tasks) == set(en.user_tasks)
+    assert set(ja.user_tasks) == set(en.user_tasks) | JA_EXTRA.get(name, set())
     assert set(ja.injection_tasks) == set(en.injection_tasks)
 
 

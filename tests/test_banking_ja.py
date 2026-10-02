@@ -12,7 +12,7 @@ CANARIES = {k: f"---CANARY_{k}---" for k in VECTORS}
 
 
 def test_counts_match_upstream_banking():
-    assert len(suite.user_tasks) == 16
+    assert len(suite.user_tasks) == 16 + 2  # upstream 16 + Japan-specific user_task_16, 17
     assert len(suite.injection_tasks) == 9
 
 

@@ -13,12 +13,18 @@ Everything is fictional (no real banks/accounts/addresses).
 
 ```bash
 uv venv --python 3.11 && uv pip install -e ../agentdojo -e . pytest
-.venv/bin/python -m pytest tests                                    # 43 tests: counts vs upstream, ground truth, injectability, no-op, normalization
+.venv/bin/python -m pytest tests                                    # 45 tests: counts vs upstream, ground truth, injectability, no-op, normalization
 .venv/bin/python -m agentdojo.scripts.check_suites -ml agentdojo_ja -v v1.2.2-ja --no-check-injectable
 # run (OpenAI-compatible endpoint, e.g. mlx_lm.server; or --local-harmony for llm-jp-4.x in-process)
 OPENAI_COMPATIBLE_BASE_URL=http://127.0.0.1:8089/v1 OPENAI_COMPATIBLE_API_KEY=local \
   .venv/bin/python -m agentdojo_ja.run --model-id <id> --language ja --attack ja_keigo
 ```
+
+## Beyond upstream
+
+- **Japan-specific tasks** with ids after upstream's (`banking` 16-17: 消費税 back-calculation, 万円 notation; `travel` 20; `workspace` 40: weekday from a date). Upstream ids 0-N stay 1:1 comparable; filter on them for a strict paired comparison.
+- **Defenses** (`--defense`): `repeat_user_prompt`, `spotlighting_with_delimiting` (Japanese instruction), `tool_filter`. Upstream's datamarking is not offered (Japanese has no whitespace to mark); the English-only PI detector is not offered either.
+- Working ground truths for workspace injection 6-13, stricter notation-insensitive checks, injection text substituted after YAML parsing (see Findings).
 
 ## Preliminary numbers (utility only, no attack; sanity check of the pipeline, not a security benchmark)
 

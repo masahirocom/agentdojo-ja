@@ -18,6 +18,7 @@ from agentdojo.attacks.attack_registry import load_attack
 from agentdojo.logging import OutputLogger
 from agentdojo.benchmark import benchmark_suite_with_injections, benchmark_suite_without_injections
 from agentdojo.task_suite.load_suites import get_suite
+from agentdojo_ja.defenses import DEFENSES, apply_defense
 from agentdojo_ja.pipeline import yaml_tool_output_formatter
 from agentdojo.agent_pipeline.tool_execution import tool_result_to_str
 
@@ -41,7 +42,9 @@ EN_SYSTEM_MESSAGE = (
 )
 
 
-def build_pipeline(model_id: str, language: str, unicode_output: bool, local_harmony: bool = False) -> AgentPipeline:
+def build_pipeline(
+    model_id: str, language: str, unicode_output: bool, local_harmony: bool = False, defense: str | None = None
+) -> AgentPipeline:
     if local_harmony:
         from agentdojo_ja.local_llm import LocalHarmonyLLM
 
@@ -54,9 +57,7 @@ def build_pipeline(model_id: str, language: str, unicode_output: bool, local_har
         llm = OpenAILLM(client, model_id)
     fmt = yaml_tool_output_formatter if unicode_output else tool_result_to_str
     system = JA_SYSTEM_MESSAGE if language == "ja" else EN_SYSTEM_MESSAGE
-    pipeline = AgentPipeline([SystemMessage(system), InitQuery(), llm, ToolsExecutionLoop([ToolsExecutor(fmt), llm])])
-    pipeline.name = model_id
-    return pipeline
+    return apply_defense(defense, system, llm, fmt, language, model_id)
 
 
 def main() -> None:
@@ -65,6 +66,7 @@ def main() -> None:
     ap.add_argument("--suite", default="banking", help="suite name, or 'all' for every Japanese suite")
     ap.add_argument("--language", choices=["ja", "en"], default="ja", help="suite + system message language")
     ap.add_argument("--attack", default=None, help="attack name; omit for a utility-only run")
+    ap.add_argument("--defense", choices=DEFENSES, default=None, help="prompt-injection defense (see defenses.py)")
     ap.add_argument("--escaped-output", action="store_true", help="ablation: upstream's \\uXXXX-escaped tool output")
     ap.add_argument("--local-harmony", action="store_true", help="run --model-id (a path) in-process with MLX; harmony tool calls")
     ap.add_argument("--user-tasks", nargs="*", default=None)
@@ -76,9 +78,9 @@ def main() -> None:
     version = agentdojo_ja.BENCHMARK_VERSION if args.language == "ja" else "v1.2.2"
     names = agentdojo_ja.SUITES if args.suite == "all" else [args.suite]
     pipeline = build_pipeline(
-        args.model_id, args.language, unicode_output=not args.escaped_output, local_harmony=args.local_harmony
+        args.model_id, args.language, unicode_output=not args.escaped_output, local_harmony=args.local_harmony, defense=args.defense
     )
-    tag = f"{args.language}{'-escaped' if args.escaped_output else ''}"
+    tag = f"{args.language}{'-escaped' if args.escaped_output else ''}{'-' + args.defense if args.defense else ''}"
     logdir = args.logdir / tag
     logdir.mkdir(parents=True, exist_ok=True)
     total_u = total_n = total_s = total_sn = 0
