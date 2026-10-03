@@ -1,5 +1,7 @@
 # agentdojo-ja
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23122805.svg)](https://doi.org/10.5281/zenodo.23122805)
+
 [English](#agentdojo-ja) | [日本語](#日本語)
 
 Japanese localization of [AgentDojo](https://github.com/ethz-spylab/agentdojo) (MIT) suites. **Unofficial community
