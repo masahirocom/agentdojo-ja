@@ -13,8 +13,8 @@ abstract: >-
   Zurich SPy Lab; MIT License).
 repository-code: "https://github.com/masahiroid/agentdojo-ja"
 license: MIT
-version: "0.2.0"
-date-released: "2026-10-02"
+version: "0.2.1"
+date-released: "2026-10-04"
 keywords:
   - llm-security
   - prompt-injection
