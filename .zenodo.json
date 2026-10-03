@@ -1,0 +1,32 @@
+{
+  "title": "agentdojo-ja",
+  "upload_type": "software",
+  "description": "Unofficial Japanese localization and extension of AgentDojo, the prompt-injection benchmark for LLM agents: Japanese tasks and injections for all four suites (97 user tasks, 31 injection tasks) and Japan-specific attack variants. Derived from AgentDojo (ETH Zurich SPy Lab; MIT License).",
+  "creators": [
+    {
+      "name": "Nakatsugawa, Masahiro",
+      "orcid": "0009-0000-3224-0103"
+    }
+  ],
+  "license": "mit",
+  "keywords": [
+    "llm-security",
+    "prompt-injection",
+    "agent-security",
+    "benchmark",
+    "japanese",
+    "agentdojo"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/masahiroid/agentdojo-ja",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/ethz-spylab/agentdojo",
+      "relation": "isDerivedFrom",
+      "scheme": "url"
+    }
+  ]
+}

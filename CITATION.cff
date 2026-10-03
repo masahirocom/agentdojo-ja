@@ -1,0 +1,61 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite it using these metadata."
+title: "agentdojo-ja"
+type: software
+authors:
+  - family-names: Nakatsugawa
+    given-names: Masahiro
+    orcid: "https://orcid.org/0009-0000-3224-0103"
+abstract: >-
+  Unofficial Japanese localization and extension of AgentDojo, the prompt-injection
+  benchmark for LLM agents: Japanese tasks and injections for all four suites (97 user
+  tasks, 31 injection tasks) and Japan-specific attack variants. Derived from AgentDojo (ETH
+  Zurich SPy Lab; MIT License).
+repository-code: "https://github.com/masahiroid/agentdojo-ja"
+license: MIT
+version: "0.2.0"
+date-released: "2026-10-02"
+keywords:
+  - llm-security
+  - prompt-injection
+  - agent-security
+  - benchmark
+  - japanese
+  - agentdojo
+references:
+  - type: software
+    title: "AgentDojo"
+    authors:
+      - family-names: Debenedetti
+        given-names: Edoardo
+      - family-names: Zhang
+        given-names: Jie
+      - family-names: Balunovic
+        given-names: Mislav
+      - family-names: Beurer-Kellner
+        given-names: Luca
+      - family-names: Fischer
+        given-names: Marc
+      - family-names: Tramèr
+        given-names: Florian
+    repository-code: "https://github.com/ethz-spylab/agentdojo"
+    license: MIT
+  - type: article
+    title: "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents"
+    authors:
+      - family-names: Debenedetti
+        given-names: Edoardo
+      - family-names: Zhang
+        given-names: Jie
+      - family-names: Balunovic
+        given-names: Mislav
+      - family-names: Beurer-Kellner
+        given-names: Luca
+      - family-names: Fischer
+        given-names: Marc
+      - family-names: Tramèr
+        given-names: Florian
+    year: 2024
+    identifiers:
+      - type: other
+        value: "arXiv:2406.13352"
