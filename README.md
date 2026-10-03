@@ -9,7 +9,7 @@ Localization, not translation: yen amounts, 全銀-style accounts, 消費税, �
 Japanese-specific attacks (keigo, fake 【システム】 notices, half-width-kana channel, script transforms).
 Everything is fictional (no real banks/accounts/addresses).
 
-Part of a set of Japanese LLM / agent security resources: see the hub [japanese-llm-security](https://github.com/masahirocom/japanese-llm-security) (which dataset answers which question).
+Part of a set of Japanese LLM / agent security resources: see the hub [japanese-llm-security](https://github.com/masahiroid/japanese-llm-security) (which dataset answers which question).
 
 ## Use
 
@@ -84,7 +84,7 @@ To be verified before relying on them: the real interbank (全銀) character set
 [AgentDojo](https://github.com/ethz-spylab/agentdojo)（MIT）の**日本語ローカライズ**（翻訳ではなく、日本の実情に合わせた版）です。**非公式のコミュニティ拡張**で、AgentDojo の作者とは無関係です。派生物のため `NOTICE.md`（帰属と派生ファイル）と `LICENSE` を参照し、利用時は AgentDojo（Debenedetti et al., NeurIPS D&B 2024）を引用してください。
 
 - **v0.2.0**: 本家の4スイート（banking / slack / travel / workspace）を、本家 v1.2.2 と同数・同IDで提供（user 97 / injection 31）。状態ベースの判定、表記ゆれに強い判定（全角半角・漢数字・住所）、日本語特有の攻撃25種（敬語、偽【システム】通知、半角カナ経路、文字種変換）。登場する人物・銀行・口座・住所は全て架空です。
-- **関連リソース**: 日本語のLLM／エージェント・セキュリティ資源の索引 [japanese-llm-security](https://github.com/masahirocom/japanese-llm-security)。
+- **関連リソース**: 日本語のLLM／エージェント・セキュリティ資源の索引 [japanese-llm-security](https://github.com/masahiroid/japanese-llm-security)。
 - **使い方**は上の English セクションの `Use` を参照してください（`pytest` で43テスト、`check_suites`）。
 - **暫定結果**（攻撃なし・utilityのみ、Claude Haiku 4.5）: 日本語 76/97、英語 75/97。日本語版は本家と同程度に解け、判定が極端に厳しい／緩いことはありません。失敗の内訳は上の表を参照。これはパイプラインの健全性確認であり、セキュリティ評価ではありません。
 - **本家への報告**: [#213](https://github.com/ethz-spylab/agentdojo/issues/213)（workspace injection 6〜13 の ground truth が空）、[#214](https://github.com/ethz-spylab/agentdojo/issues/214)（非ASCII出力が `\uXXXX` で渡る）。
